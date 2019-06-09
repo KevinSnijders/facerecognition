@@ -76,31 +76,76 @@ const Paragraph = styled.p`
 	}
 `;
 
-const Signin = ({onRouteChange}) => {
-	return (
-		<Form>
-			<FormBackground primary>
-				<Wrapper top>
-					<Title>Sign In</Title>
-					<InputField type="email" name="email-address" id="email-address"
-					            placeholder="Email Address">
-					</InputField>
-					<InputField type="password" name="password" id="password"
-					            placeholder="Password">
-					</InputField>
-					<Button onClick={() => onRouteChange('home')}
-					        className=""
-					        type="submit" value="Sign in">
-					</Button>
-				</Wrapper>
-			</FormBackground>
-			<FormBackground>
-				<Wrapper bottom>
-					<Paragraph onClick={() => onRouteChange('register')}>New here? <span>Sign Up</span></Paragraph>
-				</Wrapper>
-			</FormBackground>
-		</Form>
-	)
-};
+class Signin extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			signInEmail: '',
+			signInPassword: ''
+		}
+	}
+
+	onEmailChange = (event) => {
+		this.setState({
+			signInEmail: event.target.value
+		})
+	};
+
+	onPasswordChange = (event) => {
+		this.setState({
+			signInPassword: event.target.value
+		})
+	};
+
+	onSubmitSignIn = () => {
+		fetch('http://localhost:3000/signin', {
+			method: 'post',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: this.state.signInEmail,
+				password: this.state.signInPassword
+			})
+		}).then(response => response.json())
+			.then(user => {
+				if (user.id) {
+					this.props.loadUser(user);
+					this.props.onRouteChange('home');
+				}
+			});
+
+	};
+
+	render() {
+		const {onRouteChange} = this.props;
+		return (
+			<Form>
+				<FormBackground primary>
+					<Wrapper top>
+						<Title>Sign In</Title>
+						<InputField onChange={this.onEmailChange} type="email" name="email-address" id="email-address"
+						            placeholder="Email Address">
+						</InputField>
+						<InputField onChange={this.onPasswordChange} type="password" name="password" id="password"
+						            placeholder="Password">
+						</InputField>
+						<Button onClick={this.onSubmitSignIn}
+						        className=""
+						        type="submit" value="Sign in">
+						</Button>
+					</Wrapper>
+				</FormBackground>
+				<FormBackground>
+					<Wrapper bottom>
+						<Paragraph onClick={() => onRouteChange('register')}>New here? <span>Sign Up</span></Paragraph>
+					</Wrapper>
+				</FormBackground>
+			</Form>
+		)
+	}
+
+}
+
 
 export default Signin;
