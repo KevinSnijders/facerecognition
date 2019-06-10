@@ -1,20 +1,41 @@
 import React from 'react';
+import styled from 'styled-components';
+import Paragraph from '../../shared/Paragraph';
+
+const Nav = styled.nav`
+	display: flex;
+`;
+
+const NavParagraph = styled(Paragraph)`
+	background-color: ${props => props.theme.primaryFormBg};
+	border-radius: ${props => props.theme.borderRadius};
+	padding: .8rem 1rem
+	margin: 0;
+	
+	&:not(:last-child) {
+		margin-right: .8rem;
+	}
+	
+	&:hover {
+		background-color: #fff;
+	}
+`;
 
 const Navigation = ({onRouteChange, isSignedIn}) => {
 	if (isSignedIn) {
 		return (
-			<nav style={{display: 'flex', justifyContent: 'flex-end'}}>
-				<p onClick={() => onRouteChange('signout')} className="f3 link dim black underline pa3 pointer">Sign
-					out</p>
-			</nav>
+			<Nav>
+				<NavParagraph onClick={() => onRouteChange('signout')}>Sign
+					out</NavParagraph>
+			</Nav>
 		)
 	} else {
 		return (
-			<nav style={{display: 'flex', justifyContent: 'flex-end'}}>
-				<p onClick={() => onRouteChange('signin')} className="f3 link dim black underline pa3 pointer">Sign
-					in</p>
-				<p onClick={() => onRouteChange('register')} className="f3 link dim black underline pa3 pointer">Register</p>
-			</nav>
+			<Nav>
+				<NavParagraph onClick={() => onRouteChange('signin')}>Sign
+					in</NavParagraph>
+				<NavParagraph onClick={() => onRouteChange('register')}>Register</NavParagraph>
+			</Nav>
 		)
 	}
 

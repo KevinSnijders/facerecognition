@@ -1,14 +1,26 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const Rank = () => {
+const RankTitle = styled.h1`
+	font-size: 3rem;
+	color: ${props => props.theme.lightTextColor}
+	margin: 3rem 0 0;
+`;
+
+const RankEntries = styled.p`
+	font-size: 2.4rem;
+	color: ${props => props.theme.lightTextColor}
+    font-weight: 700;
+    padding: 1.2rem 0;
+`;
+
+const Rank = ({name, entries}) => {
 	return (
 		<div>
-			<div className="white f3">
-				{`Kevin, your current rank is`}
-			</div>
-			<div className="white f1">
-				{`#5`}
-			</div>
+			<RankTitle>{`${name}, your current rank is`}</RankTitle>
+			<RankEntries>
+				{entries}
+			</RankEntries>
 		</div>
 	)
 };
