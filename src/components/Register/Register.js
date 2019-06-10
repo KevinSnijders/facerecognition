@@ -1,63 +1,13 @@
 import React from 'react';
-import styled, {css} from 'styled-components';
 
-const BorderRadius = css`
-	border-radius: .5rem;
-`;
+import {Form, FormWrapper} from '../../shared/Form';
+import InputField from '../../shared/InputField';
+import Button from '../../shared/Button';
+import Title from '../../shared/Title';
+import styled from 'styled-components';
 
-const FormElement = css`
-	width: 100%;
-	font-size: 1.6rem;
-	padding: 1.6rem;
-	margin-bottom: 1.8rem;
-	${BorderRadius}
-`;
-
-const Form = styled.div`
-	width: 25vw;
-	border-color: rgba( 0, 0, 0, .1 );
-	box-shadow: 0.4rem 0.4rem 0.8rem 0 rgba( 0, 0, 0, .2 );
-	margin: 0 auto;
-	${BorderRadius}
-`;
-
-const FormBackground = styled.div`
-	background-color: ${props => props.primary ? "rgba(238, 238, 238, 0.8)" : "rgba(255, 255, 255, 0.9)"}
-`;
-
-const Title = styled.h4`
-	color: #333;
-	font-size: 1.8rem;
-	text-transform: uppercase;
-	font-weight: 700;
-	text-align: center;
-	margin: 2.4rem 0;
-`;
-
-const Wrapper = styled.div`
-	padding: 1.6rem 2.4rem;
-`;
-
-
-const InputField = styled.input`
-	background-color: #FFF;
-	border: 2px solid #dadada;
-	${FormElement}
-`;
-
-const Button = styled.input`
-    width: 100%;
-    background-color: #ca3435;
-    color: #FFF;
-    text-transform: uppercase;
-    border: 2px solid #ca3435;
-    transition: transform .15s ease-out;
-    cursor: pointer;
-    ${FormElement}
-    
-    &:active {
-        transform: translateY(2px);
-    }
+const RegisterForm = styled(Form)`
+	margin-top: 10rem;
 `;
 
 class Register extends React.Component {
@@ -89,7 +39,7 @@ class Register extends React.Component {
 	};
 
 	onSubmitSignIn = () => {
-		fetch('http://localhost:3000/register', {
+		fetch(`${this.props.baseApi}/register`, {
 			method: 'post',
 			headers: {
 				'Content-type': 'application/json'
@@ -110,25 +60,24 @@ class Register extends React.Component {
 
 	render() {
 		return (
-			<Form>
-				<FormBackground primary>
-					<Wrapper top>
-						<Title>Register</Title>
-						<InputField onChange={this.onNameChange} type="text" name="name" id="name"
-						            placeholder="Name">
-						</InputField>
-						<InputField onChange={this.onEmailChange} type="email" name="email-address" id="email-address"
-						            placeholder="Email Address">
-						</InputField>
-						<InputField onChange={this.onPasswordChange} type="password" name="password" id="password"
-						            placeholder="Password">
-						</InputField>
-						<Button onClick={this.onSubmitSignIn}
-						        type="submit" value="Register">
-						</Button>
-					</Wrapper>
-				</FormBackground>
-			</Form>
+			<RegisterForm>
+				<FormWrapper top>
+					<Title>Register</Title>
+					<InputField className="mb2" onChange={this.onNameChange} type="text" name="name" id="name"
+					            placeholder="Name">
+					</InputField>
+					<InputField className="mb2" onChange={this.onEmailChange} type="email" name="email-address" id="email-address"
+					            placeholder="Email Address">
+					</InputField>
+					<InputField className="mb3" onChange={this.onPasswordChange} type="password" name="password" id="password"
+					            placeholder="Password">
+					</InputField>
+					<Button className="mb3" onClick={this.onSubmitSignIn}
+					        type="submit" value="Register">
+							Register
+					</Button>
+				</FormWrapper>
+			</RegisterForm>
 		)
 	}
 }
