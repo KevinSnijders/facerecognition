@@ -51,9 +51,7 @@ const GlobalStyle = createGlobalStyle`
 	
 	input, button { 
 		width: 100%;
-		font-size: 1.6rem;
 		padding: 1.6rem;
-		margin-bottom: 1.8rem;
 		border-radius: ${props => props.theme.borderRadius}
 		
 		&:focus {
@@ -67,8 +65,14 @@ const AppWrapper = styled.main`
 	text-align: center;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	height: 100vh;
+`;
+
+const NavWrapper = styled.header`
+	display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
 `;
 
 const ParticlesWrapper = styled.div`
@@ -78,6 +82,10 @@ const ParticlesWrapper = styled.div`
 	bottom: 0;
 	left: 0;
 	z-index: -1;
+`;
+
+const HomeWrapper = styled.section`
+	
 `;
 
 const particlesOptions = {
@@ -105,7 +113,8 @@ const initialState = {
 		entries: 0,
 		joined: ''
 	},
-	theme: DefaultTheme
+	theme: DefaultTheme,
+	baseApi: 'https://fast-peak-79969.herokuapp.com'
 };
 
 class App extends Component {
@@ -154,7 +163,7 @@ class App extends Component {
 
 	onButtonSubmit = () => {
 		this.setState({imageUrl: this.state.input});
-		fetch('http://localhost:3000/imageurl', {
+		fetch(`${this.state.baseApi}/imageurl`, {
 			method: 'post',
 			headers: {
 				'Content-Type': 'application/json'
@@ -166,7 +175,7 @@ class App extends Component {
 			.then(response => response.json())
 			.then(response => {
 				if (response) {
-					fetch('http://localhost:3000/image', {
+					fetch(`${this.state.baseApi}/image`, {
 						method: 'put',
 						headers: {
 							'Content-Type': 'application/json'
@@ -201,7 +210,7 @@ class App extends Component {
 	};
 
 	render() {
-		const {isSignedIn, imageUrl, route, box, theme} = this.state;
+		const {isSignedIn, imageUrl, route, box, theme, baseApi} = this.state;
 		const {name, entries} = this.state.user;
 		return (
 			<ThemeProvider theme={theme}>
@@ -210,17 +219,21 @@ class App extends Component {
 					<ParticlesWrapper>
 						<Particles className="particles" params={particlesOptions}/>
 					</ParticlesWrapper>
-					<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+					<NavWrapper>
+						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+						<Logo/>
+					</NavWrapper>
 					{route === 'home'
-						? <div>
-							<Logo/>
+						? <HomeWrapper>
 							<Rank name={name} entries={entries}/>
 							<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
 							<FaceRecognition box={box} imageUrl={imageUrl}/>
-						</div>
+						</HomeWrapper>
 						: (route === 'signin'
-								? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
-								: <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+								?
+								<Signin baseApi={baseApi} loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+								: <Register baseApi={baseApi} loadUser={this.loadUser}
+								            onRouteChange={this.onRouteChange}/>
 						)
 					}
 				</AppWrapper>

@@ -1,4 +1,4 @@
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 const Button = styled.button`
     width: 100%;
@@ -8,10 +8,7 @@ const Button = styled.button`
     border: 2px solid ${props => props.theme.primaryColor};
     transition: transform, background-color .15s ease-out;
     cursor: pointer;
-    
-    ${props => props.primary && css`
-        background: black;
-    `}
+    font-size: ${props => props.theme.fontSize};
     
     &:hover {
         background-color: ${props => props.theme.primaryColorDrk};
@@ -22,6 +19,5 @@ const Button = styled.button`
         transform: translateY(2px);
     }
 `;
-
 
 export default Button;

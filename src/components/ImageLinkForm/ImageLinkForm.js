@@ -1,75 +1,53 @@
 import React from 'react';
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
-const BorderRadius = css`
-	border-radius: .5rem;
+import {Form, FormWrapper} from '../../shared/Form';
+import InputField from '../../shared/InputField';
+import Button from '../../shared/Button';
+
+const FormImageLink = styled(Form)`
+	width: 700px;
+	margin: 1.8rem auto 1.2rem;
 `;
 
-const FormElement = css`
-	font-size: 1.6rem;
-	padding: 1.2rem;
-	${BorderRadius}
-`;
-
-
-const FormBackground = styled.div`
-	background-color: rgba(238, 238, 238, 0.8);
-	width: 50vw;
-    display: flex;
-    padding: 2.4rem;
-`;
-
-/*const Title = styled.h4`
-	color: #333;
+const ImageLinkFormTitle = styled.h3`
 	font-size: 1.8rem;
-	text-transform: uppercase;
-	font-weight: 700;
-	text-align: center;
-	margin: 2.4rem 0;
+    font-weight: 300;
+    line-height: 2.4rem;
+    letter-spacing: .2px;
+    margin-bottom: 1.2rem;
 `;
 
-const Wrapper = styled.div`
-	padding: 1.6rem 2.4rem;
-`;
-*/
-
-const InputField = styled.input`
+const ImageLinkFormFlex = styled.div`
 	display: flex;
-	flex: 2 0 auto;
-	background-color: #FFF;
-	border: 2px solid #dadada;
-	${FormElement}
 `;
 
-const Button = styled.button`
-    display: flex;
-    flex: 1 0 auto;
-    justify-content: center;
-    background-color: #ca3435;
-    color: #FFF;
-    border: 2px solid #ca3435;
-    transition: transform .15s ease-out;
-    cursor: pointer;
-    ${FormElement}
-    
-    &:active {
-        transform: translateY(2px);
-    }
+const ImageLinkFormInput = styled(InputField)`
+	flex: 0 0 75%;
+	border-radius: 0;
 `;
 
-const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
+const ImageLinkFormButton = styled(Button)`
+	border-radius: 0;
+	&:active {
+		transform: translateY(0);
+	}
+`;
+
+const ImageLinkForm = ({onInputChange, onButtonSubmit}) => {
 	return (
-		<div>
-			<p className="f3">
-				{`This Magic Brain will detect faces in your pictures. Give it a try`}
-			</p>
-			<div className="center">
-				<FormBackground>
-					<InputField type="text" onChange={onInputChange}/>
-					<Button onClick={onButtonSubmit}>Detect</Button>
-				</FormBackground>
-			</div>
-		</div>
+		<FormImageLink>
+			<FormWrapper>
+				<ImageLinkFormTitle>
+					{`This Magic Brain will detect faces in your pictures.`}
+				</ImageLinkFormTitle>
+				<ImageLinkFormFlex>
+					<ImageLinkFormInput type="text" placeholder="Image url" onChange={onInputChange}/>
+					<ImageLinkFormButton onClick={onButtonSubmit}>Detect faces</ImageLinkFormButton>
+
+				</ImageLinkFormFlex>
+			</FormWrapper>
+		</FormImageLink>
 	)
 };
 

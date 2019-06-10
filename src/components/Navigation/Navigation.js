@@ -1,43 +1,40 @@
 import React from 'react';
 import styled from 'styled-components';
+import Paragraph from '../../shared/Paragraph';
 
 const Nav = styled.nav`
 	display: flex;
-	justify-content: center;
-	position: absolute;
-	top: .8rem;
-	right: .8rem; 
-	
-	p {
-		font-size: 1.5rem;
-		background-color: ${props => props.theme.primaryFormBg};
-		border-radius: ${props => props.theme.borderRadius};
-		cursor: pointer;
-		color: ${props => props.theme.primaryTextColor}
-		padding: .8rem 1rem
-		
-		&:not(:last-child) {
-			margin-right: .8rem;
-		}
-	}
 `;
 
-// TODO Refactor absolute position instead use calc function to center it with just flexbox;
+const NavParagraph = styled(Paragraph)`
+	background-color: ${props => props.theme.primaryFormBg};
+	border-radius: ${props => props.theme.borderRadius};
+	padding: .8rem 1rem
+	margin: 0;
+	
+	&:not(:last-child) {
+		margin-right: .8rem;
+	}
+	
+	&:hover {
+		background-color: #fff;
+	}
+`;
 
 const Navigation = ({onRouteChange, isSignedIn}) => {
 	if (isSignedIn) {
 		return (
 			<Nav>
-				<p onClick={() => onRouteChange('signout')}>Sign
-					out</p>
+				<NavParagraph onClick={() => onRouteChange('signout')}>Sign
+					out</NavParagraph>
 			</Nav>
 		)
 	} else {
 		return (
 			<Nav>
-				<p onClick={() => onRouteChange('signin')}>Sign
-					in</p>
-				<p onClick={() => onRouteChange('register')}>Register</p>
+				<NavParagraph onClick={() => onRouteChange('signin')}>Sign
+					in</NavParagraph>
+				<NavParagraph onClick={() => onRouteChange('register')}>Register</NavParagraph>
 			</Nav>
 		)
 	}

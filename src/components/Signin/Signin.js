@@ -7,6 +7,9 @@ import Button from '../../shared/Button';
 import Paragraph from '../../shared/Paragraph';
 import Title from '../../shared/Title';
 
+const SignUpForm = styled(Form)`
+	margin-top: 10rem;
+`;
 
 const SignUpBackground = styled.div`
 	background-color: ${props => props.theme.secondaryFormBg}
@@ -50,7 +53,7 @@ class Signin extends React.Component {
 	};
 
 	onSubmitSignIn = () => {
-		fetch('http://localhost:3000/signin', {
+		fetch(`${this.props.baseApi}/signin`, {
 			method: 'post',
 			headers: {
 				'Content-type': 'application/json'
@@ -72,23 +75,26 @@ class Signin extends React.Component {
 	render() {
 		const {onRouteChange} = this.props;
 		return (
-			<Form>
-			<FormWrapper>
-			<Title>Sign In</Title>
-		<InputField onChange={this.onEmailChange} type="email" name="email-address" id="email-address"
-		            placeholder="Email Address">
-		</InputField>
-		<InputField onChange={this.onPasswordChange} type="password" name="password" id="password"
-		placeholder="Password">
-			</InputField>
-		<Button onClick={this.onSubmitSignIn}>Sign in</Button>
-		</FormWrapper>
-		<SignUpBackground>
-			<FormWrapper bottom>
-				<AnimatedParagraph onClick={() => onRouteChange('register')}>New here? <Span>Sign Up</Span></AnimatedParagraph>
-			</FormWrapper>
-		</SignUpBackground>
-		</Form>
+			<SignUpForm>
+				<FormWrapper>
+					<Title>Sign In</Title>
+					<InputField className="mb2" onChange={this.onEmailChange} type="email" name="email-address"
+					            id="email-address"
+					            placeholder="Email Address">
+					</InputField>
+					<InputField className="mb3" onChange={this.onPasswordChange} type="password" name="password"
+					            id="password"
+					            placeholder="Password">
+					</InputField>
+					<Button className="mb3" onClick={this.onSubmitSignIn} type="submit" value="signin">Sign in</Button>
+				</FormWrapper>
+				<SignUpBackground>
+					<FormWrapper bottom>
+						<AnimatedParagraph onClick={() => onRouteChange('register')}>New here? <Span>Sign
+							Up</Span></AnimatedParagraph>
+					</FormWrapper>
+				</SignUpBackground>
+			</SignUpForm>
 		)
 	}
 }
