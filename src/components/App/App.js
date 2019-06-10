@@ -111,8 +111,20 @@ const initialState = {
 class App extends Component {
 	constructor() {
 		super();
-		this.state = initialState
+		this.state = initialState;
 	}
+
+	loadUser = ({id, name, email, entries, joined}) => {
+		this.setState({
+			user: {
+				id: id,
+				name: name,
+				email: email,
+				entries: entries,
+				joined: joined
+			}
+		});
+	};
 
 	calculateFaceLocation = (data) => {
 		const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
