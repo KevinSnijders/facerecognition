@@ -28,27 +28,69 @@ const AnimatedParagraph = styled(Paragraph)`
 	}
 `;
 
+class Signin extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			signInEmail: '',
+			signInPassword: ''
+		}
+	}
 
-const Signin = ({onRouteChange}) => {
-	return (
-		<Form>
+	onEmailChange = (event) => {
+		this.setState({
+			signInEmail: event.target.value
+		})
+	};
+
+	onPasswordChange = (event) => {
+		this.setState({
+			signInPassword: event.target.value
+		})
+	};
+
+	onSubmitSignIn = () => {
+		fetch('http://localhost:3000/signin', {
+			method: 'post',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: this.state.signInEmail,
+				password: this.state.signInPassword
+			})
+		}).then(response => response.json())
+			.then(user => {
+				if (user.id) {
+					this.props.loadUser(user);
+					this.props.onRouteChange('home');
+				}
+			});
+
+	};
+
+	render() {
+		const {onRouteChange} = this.props;
+		return (
+			<Form>
 			<FormWrapper>
-				<Title>Sign In</Title>
-				<InputField type="email" name="email-address" id="email-address"
-				            placeholder="Email Address">
-				</InputField>
-				<InputField type="password" name="password" id="password"
-				            placeholder="Password">
-				</InputField>
-				<Button onClick={() => onRouteChange('home')}>Sign in</Button>
+			<Title>Sign In</Title>
+		<InputField onChange={this.onEmailChange} type="email" name="email-address" id="email-address"
+		            placeholder="Email Address">
+		</InputField>
+		<InputField onChange={this.onPasswordChange} type="password" name="password" id="password"
+		placeholder="Password">
+			</InputField>
+		<Button onClick={this.onSubmitSignIn}>Sign in</Button>
+		</FormWrapper>
+		<SignUpBackground>
+			<FormWrapper bottom>
+				<AnimatedParagraph onClick={() => onRouteChange('register')}>New here? <Span>Sign Up</Span></AnimatedParagraph>
 			</FormWrapper>
-			<SignUpBackground>
-				<FormWrapper bottom>
-					<AnimatedParagraph onClick={() => onRouteChange('register')}>New here? <Span>Sign Up</Span></AnimatedParagraph>
-				</FormWrapper>
-			</SignUpBackground>
+		</SignUpBackground>
 		</Form>
-	)
-};
+		)
+	}
+}
 
 export default Signin;

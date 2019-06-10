@@ -60,28 +60,77 @@ const Button = styled.input`
     }
 `;
 
-const Register = ({onRouteChange}) => {
-	return (
-		<Form>
-			<FormBackground primary>
-				<Wrapper top>
-					<Title>Register</Title>
-					<InputField type="text" name="name" id="name"
-					            placeholder="Name">
-					</InputField>
-					<InputField type="email" name="email-address" id="email-address"
-					            placeholder="Email Address">
-					</InputField>
-					<InputField type="password" name="password" id="password"
-					            placeholder="Password">
-					</InputField>
-					<Button onClick={() => onRouteChange('home')}
-					        type="submit" value="Register">
-					</Button>
-				</Wrapper>
-			</FormBackground>
-		</Form>
-	)
-};
+class Register extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			name: '',
+			email: '',
+			password: ''
+		}
+	}
+
+	onNameChange = (event) => {
+		this.setState({
+			name: event.target.value
+		});
+	};
+
+	onEmailChange = (event) => {
+		this.setState({
+			email: event.target.value
+		});
+	};
+
+	onPasswordChange = (event) => {
+		this.setState({
+			password: event.target.value
+		});
+	};
+
+	onSubmitSignIn = () => {
+		fetch('http://localhost:3000/register', {
+			method: 'post',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				name: this.state.name,
+				email: this.state.email,
+				password: this.state.password
+			})
+		}).then(response => response.json())
+			.then(user => {
+				if (user) {
+					this.props.loadUser(user);
+					this.props.onRouteChange('home');
+				}
+			});
+	};
+
+	render() {
+		return (
+			<Form>
+				<FormBackground primary>
+					<Wrapper top>
+						<Title>Register</Title>
+						<InputField onChange={this.onNameChange} type="text" name="name" id="name"
+						            placeholder="Name">
+						</InputField>
+						<InputField onChange={this.onEmailChange} type="email" name="email-address" id="email-address"
+						            placeholder="Email Address">
+						</InputField>
+						<InputField onChange={this.onPasswordChange} type="password" name="password" id="password"
+						            placeholder="Password">
+						</InputField>
+						<Button onClick={this.onSubmitSignIn}
+						        type="submit" value="Register">
+						</Button>
+					</Wrapper>
+				</FormBackground>
+			</Form>
+		)
+	}
+}
 
 export default Register;
