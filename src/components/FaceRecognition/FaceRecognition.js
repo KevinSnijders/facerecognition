@@ -27,15 +27,24 @@ const BoundingBox = styled.div`
 `;
 
 
-const FaceRecognition = ({imageUrl, box}) => {
+const FaceRecognition = ({imageUrl, boxes}) => {
+	console.log(boxes);
 	return (
 		<FaceRecognitionWrapper>
 			{imageUrl !== '' ?
 				<ImageWrapper>
 					<Image id="inputimage" src={imageUrl} alt="face"/>
-					<BoundingBox
-						style={{left: box.leftCol, top: box.topRow, right: box.rightCol, bottom: box.bottomRow}}>
-					</BoundingBox>
+					{boxes.map((box, i) => {
+						return <BoundingBox key={i}
+							style={{
+								left: box.leftCol,
+								top: box.topRow,
+								right: box.rightCol,
+								bottom: box.bottomRow
+							}}>
+						</BoundingBox>
+					})
+					}
 				</ImageWrapper> :
 				<ImageWrapper></ImageWrapper>
 			}
