@@ -46,7 +46,7 @@ const FaceRecognition = ({imageUrl, boxes}) => {
 					})
 					}
 				</ImageWrapper> :
-				<ImageWrapper></ImageWrapper>
+				null
 			}
 		</FaceRecognitionWrapper>
 	)

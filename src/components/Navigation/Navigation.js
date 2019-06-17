@@ -1,4 +1,5 @@
 import React from 'react';
+import ProfileIcon from '../Profile/ProfileIcon';
 import styled from 'styled-components';
 import Paragraph from '../../shared/Paragraph';
 
@@ -25,15 +26,14 @@ const Navigation = ({onRouteChange, isSignedIn}) => {
 	if (isSignedIn) {
 		return (
 			<Nav>
-				<NavParagraph onClick={() => onRouteChange('signout')}>Sign
-					out</NavParagraph>
+				<ProfileIcon />
+				<NavParagraph onClick={() => onRouteChange('signout')}>Sign out</NavParagraph>
 			</Nav>
 		)
 	} else {
 		return (
 			<Nav>
-				<NavParagraph onClick={() => onRouteChange('signin')}>Sign
-					in</NavParagraph>
+				<NavParagraph onClick={() => onRouteChange('signin')}>Sign in</NavParagraph>
 				<NavParagraph onClick={() => onRouteChange('register')}>Register</NavParagraph>
 			</Nav>
 		)
