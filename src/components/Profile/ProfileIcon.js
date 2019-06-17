@@ -16,6 +16,7 @@ class ProfileIcon extends React.Component {
 	};
 
 	render() {
+		console.log(this.props);
 		return (
 			<div className="pa4 tc">
 				<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
@@ -26,9 +27,9 @@ class ProfileIcon extends React.Component {
 					>
 						<img src="http://tachyons.io/img/logo.jpg" className="br-100 h3 w3 dib" alt="avatar"/>
 					</DropdownToggle>
-					<DropdownMenu className="b--transparent shadow-5 mt-2">
-						<DropdownItem>Profile</DropdownItem>
-						<DropdownItem>Signout</DropdownItem>
+					<DropdownMenu right className="b--transparent shadow-5 mt-2">
+						<DropdownItem onClick={this.props.toggleModal}>Profile</DropdownItem>
+						<DropdownItem onClick={() => this.props.onRouteChange('signout')}>Sign out</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
 			</div>

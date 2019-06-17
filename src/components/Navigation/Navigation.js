@@ -22,12 +22,11 @@ const NavParagraph = styled(Paragraph)`
 	}
 `;
 
-const Navigation = ({onRouteChange, isSignedIn}) => {
+const Navigation = ({onRouteChange, isSignedIn, toggleModal}) => {
 	if (isSignedIn) {
 		return (
 			<Nav>
-				<ProfileIcon />
-				<NavParagraph onClick={() => onRouteChange('signout')}>Sign out</NavParagraph>
+				<ProfileIcon onRouteChange={onRouteChange} toggleModal={toggleModal}/>
 			</Nav>
 		)
 	} else {

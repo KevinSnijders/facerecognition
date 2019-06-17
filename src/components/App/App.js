@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import styled, {ThemeProvider, createGlobalStyle} from 'styled-components';
 import Particles from 'react-particles-js';
-
-
 import DefaultTheme from '../../themes/default';
-
 import Navigation from '../Navigation/Navigation';
 import Logo from '../Logo/Logo';
 import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
@@ -12,6 +9,8 @@ import FaceRecognition from '../FaceRecognition/FaceRecognition';
 import Signin from '../Signin/Signin';
 import Register from '../Register/Register';
 import Rank from '../Rank/Rank';
+import Modal from '../Modal/Modal';
+import Profile from '../Profile/Profile';
 
 const GlobalStyle = createGlobalStyle`   
 	* {
@@ -106,12 +105,14 @@ const initialState = {
 	boxes: [],
 	route: 'signin',
 	isSignedIn: false,
+	isProfileOpen: false,
 	user: {
 		id: '',
 		name: '',
 		email: '',
 		entries: 0,
-		joined: ''
+		joined: '',
+		age: ''
 	},
 	theme: DefaultTheme,
 	//baseApi: 'https://fast-peak-79969.herokuapp.com' //Heroku server
@@ -200,7 +201,7 @@ class App extends Component {
 
 	onRouteChange = (route) => {
 		if (route === 'signout') {
-			this.setState(initialState);
+			return this.setState(initialState);
 		} else if (route === 'home') {
 			this.setState({
 				isSignedIn: true
@@ -212,8 +213,15 @@ class App extends Component {
 		});
 	};
 
+	toggleModal = () => {
+		this.setState(prevState => ({
+			...prevState,
+			isProfileOpen: !prevState.isProfileOpen
+		}));
+	};
+
 	render() {
-		const {isSignedIn, imageUrl, route, boxes, theme, baseApi} = this.state;
+		const {isSignedIn, imageUrl, route, boxes, theme, baseApi, isProfileOpen, user} = this.state;
 		const {name, entries} = this.state.user;
 		return (
 			<ThemeProvider theme={theme}>
@@ -223,7 +231,12 @@ class App extends Component {
 						<Particles className="particles" params={particlesOptions}/>
 					</ParticlesWrapper>
 					<NavWrapper>
-						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/>
+						{ isProfileOpen &&
+						<Modal>
+							<Profile baseApi={baseApi} user={user} isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} loadUser={this.loadUser}/>
+						</Modal>
+						}
 						<Logo/>
 					</NavWrapper>
 					{route === 'home'
