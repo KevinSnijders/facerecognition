@@ -125,6 +125,38 @@ class App extends Component {
 		this.state = initialState;
 	}
 
+	componentDidMount() {
+		const token = window.sessionStorage.getItem('token');
+		if (token) {
+			const {baseApi} = this.state;
+			fetch(`${baseApi}/signin`, {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': token
+				}
+			}).then(response => response.json())
+				.then(data => {
+					if (data && data.id) {
+						fetch(`${baseApi}/profile/${data.id}`, {
+							method: 'get',
+							headers: {
+								'Content-Type': 'application/json',
+								'Authorization': token
+							}
+						})
+							.then(response => response.json())
+							.then(user => {
+								if (user && user.email) {
+									this.loadUser(user);
+									this.onRouteChange('home');
+								}
+							})
+					}
+				}).catch(console.log)
+		}
+	}
+
 	loadUser = ({id, name, email, entries, joined}) => {
 		this.setState({
 			user: {
@@ -138,25 +170,29 @@ class App extends Component {
 	};
 
 	calculateFaceLocations = (data) => {
-		return data.outputs[0].data.regions.map(face => {
-			const clarifaiFace = face.region_info.bounding_box;
+		if (data && data.outputs) {
 			const image = document.getElementById('inputimage');
 			const width = Number(image.width);
 			const height = Number(image.height);
-			return {
-				leftCol: clarifaiFace.left_col * width,
-				topRow: clarifaiFace.top_row * height,
-				rightCol: width - (clarifaiFace.right_col * width),
-				bottomRow: height - (clarifaiFace.bottom_row * height)
-			}
-		});
+			return data.outputs[0].data.regions.map(face => {
+				const clarifaiFace = face.region_info.bounding_box;
+				return {
+					leftCol: clarifaiFace.left_col * width,
+					topRow: clarifaiFace.top_row * height,
+					rightCol: width - (clarifaiFace.right_col * width),
+					bottomRow: height - (clarifaiFace.bottom_row * height)
+				}
+			});
+		}
 	};
 
 
 	displayFaceBoxes = (boxes) => {
-		this.setState({
-			boxes: boxes
-		});
+		if (boxes) {
+			this.setState({
+				boxes: boxes
+			});
+		}
 	};
 
 	onInputChange = (event) => {
@@ -170,7 +206,8 @@ class App extends Component {
 		fetch(`${this.state.baseApi}/imageurl`, {
 			method: 'post',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'Authorization': window.sessionStorage.getItem('token')
 			},
 			body: JSON.stringify({
 				input: this.state.input
@@ -182,7 +219,8 @@ class App extends Component {
 					fetch(`${this.state.baseApi}/image`, {
 						method: 'put',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							'Authorization': window.sessionStorage.getItem('token')
 						},
 						body: JSON.stringify({
 							id: this.state.user.id,
@@ -201,6 +239,7 @@ class App extends Component {
 
 	onRouteChange = (route) => {
 		if (route === 'signout') {
+			this.destroyAuthorizationToken();
 			return this.setState(initialState);
 		} else if (route === 'home') {
 			this.setState({
@@ -220,6 +259,15 @@ class App extends Component {
 		}));
 	};
 
+	destroyAuthorizationToken = () => {
+		const sessionStorage = window.sessionStorage;
+		const key = 'token';
+		const token = sessionStorage.getItem('token');
+		if (token) {
+			sessionStorage.removeItem(key);
+		}
+	};
+
 	render() {
 		const {isSignedIn, imageUrl, route, boxes, theme, baseApi, isProfileOpen, user} = this.state;
 		const {name, entries} = this.state.user;
@@ -231,10 +279,12 @@ class App extends Component {
 						<Particles className="particles" params={particlesOptions}/>
 					</ParticlesWrapper>
 					<NavWrapper>
-						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/>
-						{ isProfileOpen &&
+						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}
+						            toggleModal={this.toggleModal}/>
+						{isProfileOpen &&
 						<Modal>
-							<Profile baseApi={baseApi} user={user} isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} loadUser={this.loadUser}/>
+							<Profile baseApi={baseApi} user={user} isProfileOpen={isProfileOpen}
+							         toggleModal={this.toggleModal} loadUser={this.loadUser}/>
 						</Modal>
 						}
 						<Logo/>

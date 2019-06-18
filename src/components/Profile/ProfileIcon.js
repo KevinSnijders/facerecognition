@@ -16,7 +16,6 @@ class ProfileIcon extends React.Component {
 	};
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="pa4 tc">
 				<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
