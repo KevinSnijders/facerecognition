@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import styled, {ThemeProvider, createGlobalStyle} from 'styled-components';
 import Particles from 'react-particles-js';
-
-
 import DefaultTheme from '../../themes/default';
-
 import Navigation from '../Navigation/Navigation';
 import Logo from '../Logo/Logo';
 import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
@@ -12,6 +9,8 @@ import FaceRecognition from '../FaceRecognition/FaceRecognition';
 import Signin from '../Signin/Signin';
 import Register from '../Register/Register';
 import Rank from '../Rank/Rank';
+import Modal from '../Modal/Modal';
+import Profile from '../Profile/Profile';
 
 const GlobalStyle = createGlobalStyle`   
 	* {
@@ -103,18 +102,21 @@ const particlesOptions = {
 const initialState = {
 	input: '',
 	imageUrl: '',
-	box: {},
+	boxes: [],
 	route: 'signin',
 	isSignedIn: false,
+	isProfileOpen: false,
 	user: {
 		id: '',
 		name: '',
 		email: '',
 		entries: 0,
-		joined: ''
+		joined: '',
+		age: ''
 	},
 	theme: DefaultTheme,
-	baseApi: 'https://fast-peak-79969.herokuapp.com'
+	//baseApi: 'https://fast-peak-79969.herokuapp.com' //Heroku server
+	baseApi: 'http://localhost:3000' // Localhost server
 };
 
 class App extends Component {
@@ -135,23 +137,25 @@ class App extends Component {
 		});
 	};
 
-	calculateFaceLocation = (data) => {
-		const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-		const image = document.getElementById('inputimage');
-		const width = Number(image.width);
-		const height = Number(image.height);
-		return {
-			leftCol: clarifaiFace.left_col * width,
-			topRow: clarifaiFace.top_row * height,
-			rightCol: width - (clarifaiFace.right_col * width),
-			bottomRow: height - (clarifaiFace.bottom_row * height)
-		}
+	calculateFaceLocations = (data) => {
+		return data.outputs[0].data.regions.map(face => {
+			const clarifaiFace = face.region_info.bounding_box;
+			const image = document.getElementById('inputimage');
+			const width = Number(image.width);
+			const height = Number(image.height);
+			return {
+				leftCol: clarifaiFace.left_col * width,
+				topRow: clarifaiFace.top_row * height,
+				rightCol: width - (clarifaiFace.right_col * width),
+				bottomRow: height - (clarifaiFace.bottom_row * height)
+			}
+		});
 	};
 
 
-	displayFaceBox = (box) => {
+	displayFaceBoxes = (boxes) => {
 		this.setState({
-			box
+			boxes: boxes
 		});
 	};
 
@@ -190,14 +194,14 @@ class App extends Component {
 						})
 						.catch(console.log);
 				}
-				this.displayFaceBox(this.calculateFaceLocation(response));
+				this.displayFaceBoxes(this.calculateFaceLocations(response));
 			})
 			.catch(err => console.log(err));
 	};
 
 	onRouteChange = (route) => {
 		if (route === 'signout') {
-			this.setState(initialState);
+			return this.setState(initialState);
 		} else if (route === 'home') {
 			this.setState({
 				isSignedIn: true
@@ -209,8 +213,15 @@ class App extends Component {
 		});
 	};
 
+	toggleModal = () => {
+		this.setState(prevState => ({
+			...prevState,
+			isProfileOpen: !prevState.isProfileOpen
+		}));
+	};
+
 	render() {
-		const {isSignedIn, imageUrl, route, box, theme, baseApi} = this.state;
+		const {isSignedIn, imageUrl, route, boxes, theme, baseApi, isProfileOpen, user} = this.state;
 		const {name, entries} = this.state.user;
 		return (
 			<ThemeProvider theme={theme}>
@@ -220,14 +231,19 @@ class App extends Component {
 						<Particles className="particles" params={particlesOptions}/>
 					</ParticlesWrapper>
 					<NavWrapper>
-						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/>
+						{ isProfileOpen &&
+						<Modal>
+							<Profile baseApi={baseApi} user={user} isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} loadUser={this.loadUser}/>
+						</Modal>
+						}
 						<Logo/>
 					</NavWrapper>
 					{route === 'home'
 						? <HomeWrapper>
 							<Rank name={name} entries={entries}/>
 							<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
-							<FaceRecognition box={box} imageUrl={imageUrl}/>
+							<FaceRecognition boxes={boxes} imageUrl={imageUrl}/>
 						</HomeWrapper>
 						: (route === 'signin'
 								?
