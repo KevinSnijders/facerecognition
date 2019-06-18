@@ -38,12 +38,17 @@ class Profile extends React.Component{
 		const {baseApi} = this.props;
 		fetch(`${baseApi}/profile/${this.props.user.id}`, {
 			method: 'post',
-			headers: {'Content-Type': 'application/json'},
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': window.sessionStorage.getItem('token')
+			},
 			body: JSON.stringify({formInput: data})
 		})
 			.then(response => {
-				this.props.toggleModal();
-				this.props.loadUser({...this.props.user, ...data});
+				if (response.status === 200 || response.status === 304) {
+					this.props.toggleModal();
+					this.props.loadUser({...this.props.user, ...data});
+				}
 			})
 			.catch(console.log)
 	};
