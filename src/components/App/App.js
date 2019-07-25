@@ -9,8 +9,7 @@ import Navigation from '../Navigation/Navigation';
 import Logo from '../Logo/Logo';
 import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
 import FaceRecognition from '../FaceRecognition/FaceRecognition';
-import Signin from '../Signin/Signin';
-import Register from '../Register/Register';
+import UserForm from '../UserForm/UserForm';
 import Rank from '../Rank/Rank';
 
 const GlobalStyle = createGlobalStyle`   
@@ -114,7 +113,7 @@ const initialState = {
 		joined: ''
 	},
 	theme: DefaultTheme,
-	baseApi: 'https://fast-peak-79969.herokuapp.com'
+	baseApi: 'http://localhost:3000'
 };
 
 class App extends Component {
@@ -229,12 +228,7 @@ class App extends Component {
 							<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
 							<FaceRecognition box={box} imageUrl={imageUrl}/>
 						</HomeWrapper>
-						: (route === 'signin'
-								?
-								<Signin baseApi={baseApi} loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
-								: <Register baseApi={baseApi} loadUser={this.loadUser}
-								            onRouteChange={this.onRouteChange}/>
-						)
+						: <UserForm route={route} baseApi={baseApi} loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
 					}
 				</AppWrapper>
 			</ThemeProvider>
