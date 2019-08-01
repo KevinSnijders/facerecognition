@@ -71,6 +71,11 @@ class UserForm extends React.Component {
 		})
 	};
 
+	saveAuthTokenInSession = (token) => {
+		window.sessionStorage.setItem('token', token);
+	};
+
+
 	getFetchBody = (type) => {
 		let body = {
 			email: this.state.email,
@@ -125,8 +130,26 @@ class UserForm extends React.Component {
 						}
 
 					});
-					this.props.loadUser(data);
-					this.props.onRouteChange('home');
+				}
+				console.log(data);
+				if (data.userId && data.success === 'true') {
+					this.saveAuthTokenInSession(data.token);
+					fetch(`${this.props.baseApi}/profile/${data.userId}`, {
+						method: 'get',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': data.token
+						}
+					})
+						.then(response => response.json())
+						.then(user => {
+							if (user && user.email) {
+								this.props.loadUser(user);
+								this.props.onRouteChange('home');
+							}
+						})
+				} else {
+					console.log("error")
 				}
 			})
 			.catch(err => console.log(err));
