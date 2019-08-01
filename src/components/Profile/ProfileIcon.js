@@ -1,5 +1,10 @@
 import React from 'react';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import styled from 'styled-components';
+
+const DropDownItem = styled(DropdownItem)`
+	font-size: 1.6rem;
+`;
 
 class ProfileIcon extends React.Component {
 	constructor(props) {
@@ -27,8 +32,8 @@ class ProfileIcon extends React.Component {
 						<img src="http://tachyons.io/img/logo.jpg" className="br-100 h3 w3 dib" alt="avatar"/>
 					</DropdownToggle>
 					<DropdownMenu right className="b--transparent shadow-5 mt-2">
-						<DropdownItem onClick={this.props.toggleModal}>Profile</DropdownItem>
-						<DropdownItem onClick={() => this.props.onRouteChange('signout')}>Sign out</DropdownItem>
+						<DropDownItem onClick={this.props.toggleModal}>Profile</DropDownItem>
+						<DropDownItem onClick={() => this.props.onRouteChange('signout')}>Sign out</DropDownItem>
 					</DropdownMenu>
 				</Dropdown>
 			</div>

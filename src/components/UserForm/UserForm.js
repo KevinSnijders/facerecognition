@@ -131,10 +131,10 @@ class UserForm extends React.Component {
 
 					});
 				}
-				console.log(data);
-				if (data.userId && data.success === 'true') {
+				console.log(data.id);
+				if (data.id) {
 					this.saveAuthTokenInSession(data.token);
-					fetch(`${this.props.baseApi}/profile/${data.userId}`, {
+					fetch(`${this.props.baseApi}/profile/${data.id}`, {
 						method: 'get',
 						headers: {
 							'Content-Type': 'application/json',
