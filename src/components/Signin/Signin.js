@@ -52,10 +52,7 @@ class Signin extends React.Component {
 		})
 	};
 
-	saveAuthTokenInSession = (token) => {
-		window.sessionStorage.setItem('token', token);
-	};
-
+	
 	onSubmitSignIn = () => {
 		fetch(`${this.props.baseApi}/signin`, {
 			method: 'post',
