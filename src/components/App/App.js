@@ -127,7 +127,8 @@ class App extends Component {
 
 	componentDidMount() {
 		const token = window.sessionStorage.getItem('token');
-		if (token) {
+		console.log(token);
+		if (token && token !== 'undefined') {
 			const {baseApi} = this.state;
 			fetch(`${baseApi}/signin`, {
 				method: 'post',
