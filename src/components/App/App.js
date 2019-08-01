@@ -47,14 +47,18 @@ const GlobalStyle = createGlobalStyle`
 	
 	input, button { 
 		width: 100%;
-		padding: 1.6rem;
+		padding: 1.2rem;
 		border-radius: ${props => props.theme.borderRadius}
 		
 		&:focus {
 			outline: none;
 		}
+	},
+	#modal {
+	    position: relative;
+	    z-index: 999;
 	}
-	
+		
 `;
 
 const AppWrapper = styled.main`
@@ -291,7 +295,8 @@ class App extends Component {
 							<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
 							<FaceRecognition boxes={boxes} imageUrl={imageUrl}/>
 						</HomeWrapper>
-						: <UserForm route={route} baseApi={baseApi} loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+						: <UserForm route={route} baseApi={baseApi} loadUser={this.loadUser}
+						            onRouteChange={this.onRouteChange}/>
 					}
 				</AppWrapper>
 			</ThemeProvider>
