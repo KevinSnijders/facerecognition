@@ -7,12 +7,19 @@ import Button from '../../shared/Button';
 import Paragraph from '../../shared/Paragraph';
 import Title from '../../shared/Title';
 
-const SignUpForm = styled(Form)`
+const UserFormContainer = styled(Form)`
 	margin-top: 10rem;
 `;
 
-const SignUpBackground = styled.div`
+const UserFormAnchor = styled.div`
 	background-color: ${props => props.theme.secondaryFormBg}
+`;
+
+const UserFormError = styled.div`
+	font-size: 1.4rem;
+	color: ${props => props.theme.primaryColor}
+	margin-bottom: 2rem;
+	transition: 
 `;
 
 const Span = styled.span`
@@ -29,10 +36,6 @@ const AnimatedParagraph = styled(Paragraph)`
 	&:hover {
 		transform: scale(1.05) translateY(2px);
 	}
-`;
-
-const RegisterForm = styled(Form)`
-	margin-top: 10rem;
 `;
 
 class UserForm extends React.Component {
@@ -76,7 +79,7 @@ class UserForm extends React.Component {
 		let registerBody, signInBody;
 		switch (type) {
 			case 'register' :
-				registerBody = {name: this.state.name,...body};
+				registerBody = {name: this.state.name, ...body};
 				return registerBody;
 			case 'signin' :
 				signInBody = {...body};
@@ -137,7 +140,7 @@ class UserForm extends React.Component {
 				            id="email-address"
 				            placeholder="Email Address">
 				</InputField>
-				<InputField className="mb3" onChange={this.onPasswordChange} type="password" name="password"
+				<InputField className="mb4" onChange={this.onPasswordChange} type="password" name="password"
 				            id="password"
 				            placeholder="Password">
 				</InputField>
@@ -146,28 +149,32 @@ class UserForm extends React.Component {
 
 		if (route === 'signin' || route === 'signout') {
 			return (
-				<SignUpForm>
+				<UserFormContainer>
 					<FormWrapper>
 						<Title>Sign In</Title>
-						{this.state.message.error}
+						<UserFormError>
+							{this.state.message.error}
+						</UserFormError>
 						{sharedInputMarkup}
 						<Button className="mb3" onClick={() => this.onSubmitForm(route)} type="submit" value="signin">Sign
 							in</Button>
 					</FormWrapper>
-					<SignUpBackground>
+					<UserFormAnchor>
 						<FormWrapper bottom>
 							<AnimatedParagraph onClick={() => onRouteChange('register')}>New here? <Span>Sign
 								Up</Span></AnimatedParagraph>
 						</FormWrapper>
-					</SignUpBackground>
-				</SignUpForm>
+					</UserFormAnchor>
+				</UserFormContainer>
 			);
 		} else if (route === 'register') {
 			return (
-				<RegisterForm>
+				<UserFormContainer>
 					<FormWrapper top>
 						<Title>Register</Title>
-						{this.state.message.error}
+						<UserFormError>
+							{this.state.message.error}
+						</UserFormError>
 						<InputField className="mb2" onChange={this.onNameChange} type="text" name="name" id="name"
 						            placeholder="Name">
 						</InputField>
@@ -177,7 +184,13 @@ class UserForm extends React.Component {
 							Register
 						</Button>
 					</FormWrapper>
-				</RegisterForm>
+					<UserFormAnchor>
+						<FormWrapper bottom>
+							<AnimatedParagraph onClick={() => onRouteChange('signin')}>Already have an account? <Span>Sign
+								in</Span></AnimatedParagraph>
+						</FormWrapper>
+					</UserFormAnchor>
+				</UserFormContainer>
 			)
 		}
 	};

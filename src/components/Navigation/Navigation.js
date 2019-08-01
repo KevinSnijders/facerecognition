@@ -9,11 +9,12 @@ const Nav = styled.nav`
 const NavParagraph = styled(Paragraph)`
 	background-color: ${props => props.theme.primaryFormBg};
 	border-radius: ${props => props.theme.borderRadius};
-	padding: .8rem 1rem
+	font-size: 1.8rem;
+	padding: 1.2rem 1.6rem
 	margin: 0;
 	
 	&:not(:last-child) {
-		margin-right: .8rem;
+		margin-right: 1.2rem;
 	}
 	
 	&:hover {
@@ -30,13 +31,7 @@ const Navigation = ({onRouteChange, isSignedIn}) => {
 			</Nav>
 		)
 	} else {
-		return (
-			<Nav>
-				<NavParagraph onClick={() => onRouteChange('signin')}>Sign
-					in</NavParagraph>
-				<NavParagraph onClick={() => onRouteChange('register')}>Register</NavParagraph>
-			</Nav>
-		)
+		return null
 	}
 
 };

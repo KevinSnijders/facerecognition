@@ -31,9 +31,7 @@ const GlobalStyle = createGlobalStyle`
     
 	body {
 	  margin: 0;
-	  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-	    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-	    sans-serif;
+	  font-family: 'Montserrat', sans-serif;
 	  -webkit-font-smoothing: antialiased;
 	  -moz-osx-font-smoothing: grayscale;
 	    background: ${props => props.theme.background}
@@ -68,7 +66,6 @@ const AppWrapper = styled.main`
 
 const NavWrapper = styled.header`
 	display: flex;
-    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
@@ -219,8 +216,8 @@ class App extends Component {
 						<Particles className="particles" params={particlesOptions}/>
 					</ParticlesWrapper>
 					<NavWrapper>
-						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
 						<Logo/>
+						<Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
 					</NavWrapper>
 					{route === 'home'
 						? <HomeWrapper>
