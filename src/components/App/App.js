@@ -115,8 +115,7 @@ const initialState = {
 		age: ''
 	},
 	theme: DefaultTheme,
-	//baseApi: 'https://fast-peak-79969.herokuapp.com' //Heroku server
-	baseApi: 'http://localhost:3000' // Localhost server
+	baseApi: 'https://fast-peak-79969.herokuapp.com' //Heroku server
 };
 
 class App extends Component {
@@ -127,7 +126,7 @@ class App extends Component {
 
 	componentDidMount() {
 		const token = window.sessionStorage.getItem('token');
-		if (token) {
+		if (token && token !== 'undefined') {
 			const {baseApi} = this.state;
 			fetch(`${baseApi}/signin`, {
 				method: 'post',

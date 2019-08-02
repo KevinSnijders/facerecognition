@@ -75,14 +75,20 @@ class UserForm extends React.Component {
 		window.sessionStorage.setItem('token', token);
 	};
 
+	getUserRoute() {
+		let {route} = this.props;
+		return route
+	}
 
-	getFetchBody = (type) => {
+	createBody() {
+		let registerBody, signInBody;
 		let body = {
 			email: this.state.email,
 			password: this.state.password
 		};
-		let registerBody, signInBody;
-		switch (type) {
+		let route = this.getUserRoute();
+
+		switch (route) {
 			case 'register' :
 				registerBody = {name: this.state.name, ...body};
 				return registerBody;
@@ -94,29 +100,50 @@ class UserForm extends React.Component {
 		}
 	};
 
-	onSubmitForm = (type) => {
-		let body = this.getFetchBody(type);
+	getProfileData = (data) => {
+		fetch(`${this.props.baseApi}/profile/${data.userId}`, {
+			method: 'get',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': data.token
+			}
+		})
+			.then(response => response.json())
+			.then(user => {
+				if (user && user.email) {
+					this.props.loadUser(user);
+					this.props.onRouteChange('home');
+				}
+			})
+	};
 
-		fetch(`${this.props.baseApi}/${type}`, {
+	checkResponseStatus(response) {
+		console.log(response);
+		switch (response.status) {
+			case 200:
+				return this.setState({error: false});
+			case 400:
+				return this.setState({error: true});
+			default:
+				return this.setState({error: false});
+		}
+	}
+
+	onSubmitForm() {
+		let body = this.createBody();
+		let route = this.getUserRoute();
+		fetch(`${this.props.baseApi}/${route}`, {
 			method: 'post',
 			headers: {
 				'Content-type': 'application/json'
 			},
 			body: JSON.stringify(body)
-
 		}).then(response => {
-			if (response.status === 200) {
-				this.setState({
-					error: false,
-				});
-			} else {
-				this.setState({
-					error: true,
-				});
-			}
+			this.checkResponseStatus(response);
 			return response.json()
 		})
 			.then(data => {
+				console.log(data);
 				if (this.state.error) {
 					this.setState({
 						message: {
@@ -131,29 +158,22 @@ class UserForm extends React.Component {
 
 					});
 				}
-				console.log(data.id);
-				if (data.id) {
-					this.saveAuthTokenInSession(data.token);
-					fetch(`${this.props.baseApi}/profile/${data.id}`, {
-						method: 'get',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': data.token
-						}
-					})
-						.then(response => response.json())
-						.then(user => {
-							if (user && user.email) {
-								this.props.loadUser(user);
-								this.props.onRouteChange('home');
-							}
-						})
+
+				if (route === 'signin') {
+					if (data.userId && data.success) {
+						this.saveAuthTokenInSession(data.token);
+						this.getProfileData(data);
+					}
 				} else {
-					console.log("error")
+					if (data) {
+						this.props.loadUser(data);
+						this.props.onRouteChange('home');
+					}
 				}
 			})
 			.catch(err => console.log(err));
 	};
+
 
 	createFormMarkup() {
 		const {route, onRouteChange} = this.props;

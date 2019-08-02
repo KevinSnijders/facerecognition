@@ -115,11 +115,11 @@ class Profile extends React.Component {
 						            id="user--name"
 						            placeholder={user.name}>
 						</InputField>
-						<UserLabel htmlFor="user--age">Age:</UserLabel>
-						<InputField onChange={this.onFormChange} className="mb2" type="text" name="user--age"
-						            id="user--age"
-						            placeholder={user.age}>
-						</InputField>
+						{/*<UserLabel htmlFor="user--age">Age:</UserLabel>*/}
+						{/*<InputField onChange={this.onFormChange} className="mb2" type="text" name="user--age"*/}
+						{/*            id="user--age"*/}
+						{/*            placeholder={user.age}>*/}
+						{/*</InputField>*/}
 						<div className="d-flex mt-4 mb-3">
 							<SaveButton className="btn btn-danger btn-lg"
 							            onClick={() => this.onProfileUpdate({name, age})}>Save</SaveButton>
