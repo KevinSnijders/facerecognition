@@ -116,7 +116,6 @@ const initialState = {
 	},
 	theme: DefaultTheme,
 	baseApi: 'https://fast-peak-79969.herokuapp.com' //Heroku server
-	//baseApi: 'http://localhost:3000' // Localhost server
 };
 
 class App extends Component {
