@@ -9,6 +9,7 @@ const Form = styled.div`
 	background-color: ${props => props.theme.primaryFormBg};
 	border-radius: ${props => props.theme.borderRadius};
 	overflow: hidden;
+	position: relative;
 `;
 
 const FormWrapper = styled.div`

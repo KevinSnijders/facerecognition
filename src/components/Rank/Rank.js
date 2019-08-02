@@ -8,7 +8,7 @@ const RankTitle = styled.h1`
 `;
 
 const RankEntries = styled.p`
-	font-size: 2.4rem;
+	font-size: 3.2rem;
 	color: ${props => props.theme.lightTextColor}
     font-weight: 700;
     padding: 1.2rem 0;
