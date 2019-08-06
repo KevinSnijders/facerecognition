@@ -38,6 +38,11 @@ const AnimatedParagraph = styled(Paragraph)`
 	}
 `;
 
+const initialResponse = {
+	success: false,
+	message: ''
+};
+
 class UserForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -45,10 +50,8 @@ class UserForm extends React.Component {
 			name: '',
 			email: '',
 			password: '',
-			error: false,
-			message: {
-				error: "",
-				success: ""
+			response: {
+				initialResponse
 			}
 		}
 	}
@@ -78,6 +81,16 @@ class UserForm extends React.Component {
 	getUserRoute() {
 		let {route} = this.props;
 		return route
+	}
+
+	setResponseMessage(response) {
+		let {success, message} = response;
+		this.setState({
+			response: {
+				success,
+				message
+			}
+		})
 	}
 
 	createBody() {
@@ -117,15 +130,21 @@ class UserForm extends React.Component {
 			})
 	};
 
-	checkResponseStatus(response) {
-		console.log(response);
-		switch (response.status) {
-			case 200:
-				return this.setState({error: false});
-			case 400:
-				return this.setState({error: true});
+	loadUserRoute(route, data) {
+		let { user } = data;
+		switch (route) {
+			case 'signin':
+				if (data.userId) {
+					this.saveAuthTokenInSession(data.token);
+					this.getProfileData(data);
+				}
+				break;
+			case 'register':
+				this.props.loadUser(user);
+				this.props.onRouteChange('home');
+				break;
 			default:
-				return this.setState({error: false});
+				return null
 		}
 	}
 
@@ -139,36 +158,14 @@ class UserForm extends React.Component {
 			},
 			body: JSON.stringify(body)
 		}).then(response => {
-			this.checkResponseStatus(response);
 			return response.json()
 		})
 			.then(data => {
-				console.log(data);
-				if (this.state.error) {
-					this.setState({
-						message: {
-							error: data
-						}
-					})
-				} else if (data) {
-					this.setState({
-						message: {
-							error: ''
-						}
-
-					});
-				}
-
-				if (route === 'signin') {
-					if (data.userId && data.success) {
-						this.saveAuthTokenInSession(data.token);
-						this.getProfileData(data);
-					}
+				if (data.success === true) {
+					this.setResponseMessage(data);
+					this.loadUserRoute(route, data);
 				} else {
-					if (data) {
-						this.props.loadUser(data);
-						this.props.onRouteChange('home');
-					}
+					this.setResponseMessage(data)
 				}
 			})
 			.catch(err => console.log(err));
@@ -180,23 +177,21 @@ class UserForm extends React.Component {
 		let sharedInputMarkup = (
 			<div>
 				<InputField className="mb2" onChange={this.onEmailChange} type="email" name="email-address"
-				            id="email-address"
-				            placeholder="Email Address">
-				</InputField>
+				            id="email-address" placeholder="Email address" label="Email address"
+				            required/>
+
+
 				<InputField className="mb4" onChange={this.onPasswordChange} type="password" name="password"
-				            id="password"
-				            placeholder="Password">
-				</InputField>
+				            id="password" placeholder="Password" label="password" required/>
 			</div>
 		);
-
 		if (route === 'signin' || route === 'signout') {
 			return (
 				<UserFormContainer>
 					<FormWrapper>
 						<Title>Sign In</Title>
 						<UserFormError>
-							{this.state.message.error}
+							{this.state.response.message}
 						</UserFormError>
 						{sharedInputMarkup}
 						<Button className="mb3" onClick={() => this.onSubmitForm(route)} type="submit" value="signin">Sign
@@ -204,7 +199,7 @@ class UserForm extends React.Component {
 					</FormWrapper>
 					<UserFormAnchor>
 						<FormWrapper bottom>
-							<AnimatedParagraph onClick={() => onRouteChange('register')}>New here? <Span>Sign
+							<AnimatedParagraph onClick={() => {onRouteChange('register'); this.setResponseMessage(initialResponse);}}>New here? <Span>Sign
 								Up</Span></AnimatedParagraph>
 						</FormWrapper>
 					</UserFormAnchor>
@@ -216,10 +211,10 @@ class UserForm extends React.Component {
 					<FormWrapper top>
 						<Title>Register</Title>
 						<UserFormError>
-							{this.state.message.error}
+							{this.state.response.message}
 						</UserFormError>
 						<InputField className="mb2" onChange={this.onNameChange} type="text" name="name" id="name"
-						            placeholder="Name">
+						            placeholder="Name" label="Name" required>
 						</InputField>
 						{sharedInputMarkup}
 						<Button className="mb3" onClick={() => this.onSubmitForm(route)}
@@ -229,13 +224,14 @@ class UserForm extends React.Component {
 					</FormWrapper>
 					<UserFormAnchor>
 						<FormWrapper bottom>
-							<AnimatedParagraph onClick={() => onRouteChange('signin')}>Already have an account? <Span>Sign
+							<AnimatedParagraph onClick={() => {onRouteChange('signin'); this.setResponseMessage(initialResponse);}}>Already have an account? <Span>Sign
 								in</Span></AnimatedParagraph>
 						</FormWrapper>
 					</UserFormAnchor>
 				</UserFormContainer>
 			)
-		}
+		} else
+			return null
 	};
 
 	render() {
