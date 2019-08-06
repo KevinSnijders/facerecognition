@@ -7,7 +7,9 @@ import Button from '../../shared/Button';
 import Paragraph from '../../shared/Paragraph';
 import Title from '../../shared/Title';
 
-const UserFormContainer = styled(Form)`
+const UserFormContainer = styled(Form).attrs({
+	as: "form"
+})`
 	margin-top: 10rem;
 `;
 

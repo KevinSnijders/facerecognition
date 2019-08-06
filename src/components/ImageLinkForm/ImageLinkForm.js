@@ -42,7 +42,7 @@ const ImageLinkForm = ({onInputChange, onButtonSubmit}) => {
 					{`This Magic Brain will detect faces in your pictures.`}
 				</ImageLinkFormTitle>
 				<ImageLinkFormFlex>
-					<ImageLinkFormInput type="text" placeholder="Image url" onChange={onInputChange}/>
+					<ImageLinkFormInput type="text" placeholder="Image url" label="Image url" onChange={onInputChange}/>
 					<ImageLinkFormButton onClick={onButtonSubmit}>Detect faces</ImageLinkFormButton>
 
 				</ImageLinkFormFlex>

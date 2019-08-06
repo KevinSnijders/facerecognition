@@ -29,7 +29,7 @@ class ProfileIcon extends React.Component {
 						data-toggle="dropdown"
 						aria-expanded={this.state.dropdownOpen}
 					>
-						<img src="http://tachyons.io/img/logo.jpg" className="br-100 h3 w3 dib" alt="avatar"/>
+						<img src="https://tachyons.io/img/logo.jpg" className="br-100 h3 w3 dib" alt="avatar"/>
 					</DropdownToggle>
 					<DropdownMenu right className="b--transparent shadow-5 mt-2">
 						<DropDownItem onClick={this.props.toggleModal}>Profile</DropDownItem>
