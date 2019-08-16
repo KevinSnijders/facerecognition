@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Form, FormWrapper} from '../../shared/Form';
-import InputField from '../../shared/InputField';
 import Button from '../../shared/Button';
 import IconInputField from '../../shared/Icon';
 import UserIcon from '../../assets/svg/icons/user.svg'
