@@ -8,12 +8,13 @@ const Form = styled.div`
 	margin: 0 auto;
 	background-color: ${props => props.theme.primaryFormBg};
 	border-radius: ${props => props.theme.borderRadius};
+	border-top: 5px solid ${props => props.theme.primaryColor};
 	overflow: hidden;
 	position: relative;
 `;
 
 const FormWrapper = styled.div`
-	padding: 1.6rem 2.4rem;
+	padding: ${props => props.theme.gap};
 `;
 
 export {Form, FormWrapper};

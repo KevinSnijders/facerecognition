@@ -5,6 +5,7 @@ const RankTitle = styled.h1`
 	font-size: 3rem;
 	color: ${props => props.theme.lightTextColor}
 	margin: 3rem 0 0;
+	font-style: italic;
 `;
 
 const RankEntries = styled.p`
