@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'tachyons';
+
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
