@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
 const Title = styled.h4`
-	color: #333;
+	color: ${props => props.theme.primaryColor};
 	font-size: 2.4rem;
-	font-weight: 700;
 	text-align: center;
-	margin: 2.4rem 0;
+	margin-bottom: ${props => props.theme.gap};
 `;
 
 export default Title;

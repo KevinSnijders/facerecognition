@@ -2,10 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {Form, FormWrapper} from '../../shared/Form';
-import InputField from '../../shared/InputField';
+import IconInputField from '../../shared/Icon';
 import Button from '../../shared/Button';
 import Paragraph from '../../shared/Paragraph';
 import Title from '../../shared/Title';
+import UserIcon from '../../assets/svg/icons/user.svg'
+import PasswordIcon from '../../assets/svg/icons/password.svg'
+import EmailIcon from '../../assets/svg/icons/email.svg'
 
 const UserFormContainer = styled(Form).attrs({
     as: "form"
@@ -19,14 +22,18 @@ const UserFormAnchor = styled.div`
 
 const UserFormError = styled.div`
 	font-size: 1.4rem;
-	color: ${props => props.theme.primaryColor}
-	margin-bottom: 2rem;
-	transition: 
+    background-color: #fae5e5;
+    border: 1px solid #ED4747;
+    padding: .8rem;
+    font-style: italic;
+    margin-bottom: 1.6rem;
+    border-radius: ${props => props.theme.borderRadius};
 `;
 
 const Span = styled.span`
 	color: ${props => props.theme.primaryColor};
-	
+	text-decoration: underline;
+	    
 	&:hover {
 		color: ${props => props.theme.primaryColorDrk};
 	}
@@ -210,6 +217,19 @@ class UserForm extends React.Component {
             .catch(err => console.log(err));
     };
 
+    displayError() {
+        let {message} = this.state.response;
+        if (message !== '' && message !== undefined) {
+            return (
+                <UserFormError>
+                    <strong>Error:</strong> {this.state.response.message}
+                </UserFormError>
+            )
+        } else {
+            return null
+        }
+    }
+
     createFormMarkup() {
         const {route, onRouteChange} = this.props;
         const errors = validate(route, this.state.name, this.state.email, this.state.password);
@@ -253,9 +273,7 @@ class UserForm extends React.Component {
                 <UserFormContainer>
                     <FormWrapper>
                         <Title>Sign In</Title>
-                        <UserFormError>
-                            {this.state.response.message}
-                        </UserFormError>
+                        {this.displayError()}
                         {sharedInputMarkup}
                         <Button className="mb3" disabled={isDisabled} onClick={() => this.onSubmitForm(route)}
                                 type="button" value="signin">Sign
@@ -277,9 +295,7 @@ class UserForm extends React.Component {
                 <UserFormContainer>
                     <FormWrapper top>
                         <Title>Register</Title>
-                        <UserFormError>
-                            {this.state.response.message}
-                        </UserFormError>
+                        {this.displayError()}
                         <InputField
                             id="name"
                             className={shouldMarkError("name") ? "mb2 error" : "mb2"}

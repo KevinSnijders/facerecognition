@@ -1,16 +1,13 @@
 import React from 'react';
-import {Form, FormWrapper} from '../../shared/Form';
-import InputField from '../../shared/InputField';
-import Button from '../../shared/Button';
 import styled from 'styled-components';
-
-
-const ProfileForm = styled(Form)`
-	margin-top: 10rem;
-`;
+import {Form, FormWrapper} from '../../shared/Form';
+import Button from '../../shared/Button';
+import IconInputField from '../../shared/Icon';
+import UserIcon from '../../assets/svg/icons/user.svg'
+import defaultProfile from '../../assets/png/profile-default.png';
 
 const ProfileModal = styled.div`
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.75);
 	position: fixed;
 	height: 100%;
 	width: 100%;
@@ -19,6 +16,19 @@ const ProfileModal = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	
+	h3, p {
+		margin: 0;
+	}
+`;
+
+const ProfileImage = styled.img`
+	background-color: #fff;
+	width: 5rem;
+	height: 5rem;
+	margin-right: .8rem;
+	border-radius: 100%;
+	cursor: pointer;
 `;
 
 const SaveButton = styled(Button)`
@@ -47,10 +57,14 @@ const ModalClose = styled.div`
 const UserDetails = styled.div`
 	display: flex;
 	align-items: center;
+	padding-bottom: ${props => props.theme.gap};
 `;
 
-const UserLabel = styled.label`
+const ImagesSubmitted = styled.h4`
+	font-style: italic;
+    padding-bottom: 1.6rem;
     font-size: 1.4rem;
+    margin: 0;
 `;
 
 class Profile extends React.Component {
@@ -102,33 +116,29 @@ class Profile extends React.Component {
 		const {name, age} = this.state;
 		return (
 			<ProfileModal>
-				<ProfileForm>
+				<Form>
 					<FormWrapper top>
 						<UserDetails>
-							<img src="http://tachyons.io/img/logo.jpg" className="br-100 h3 w3 mr3 dib" alt="avatar"/>
-							<h1>{this.state.name}</h1>
+							<ProfileImage src={defaultProfile} alt="avatar"/>
+							<div>
+							<h3>{this.state.name}</h3>
+							<p>{`Member since: ${new Date(user.joined).toLocaleDateString()}`}</p>
+							</div>
 						</UserDetails>
-						<h4>{`Images submitted: ${user.entries}`}</h4>
-						<p>{`Member since: ${new Date(user.joined).toLocaleDateString()}`}</p>
-						<UserLabel htmlFor="user--name">Name:</UserLabel>
-						<InputField onChange={this.onFormChange} className="mb2" type="text" name="user--name"
+						<ImagesSubmitted>{`Images submitted: ${user.entries}`}</ImagesSubmitted>
+						<IconInputField src={UserIcon} onChange={this.onFormChange} className="mb2" type="text" name="user--name"
 						            id="user--name"
 						            placeholder={user.name}>
-						</InputField>
-						{/*<UserLabel htmlFor="user--age">Age:</UserLabel>*/}
-						{/*<InputField onChange={this.onFormChange} className="mb2" type="text" name="user--age"*/}
-						{/*            id="user--age"*/}
-						{/*            placeholder={user.age}>*/}
-						{/*</InputField>*/}
-						<div className="d-flex mt-4 mb-3">
-							<SaveButton className="btn btn-danger btn-lg"
+						</IconInputField>
+						<div className="d-flex">
+							<SaveButton className="btn-lg"
 							            onClick={() => this.onProfileUpdate({name, age})}>Save</SaveButton>
 							<CancelButton className="btn btn-light btn-lg"
 							              onClick={this.props.toggleModal}>Cancel</CancelButton>
 						</div>
 					</FormWrapper>
 					<ModalClose onClick={this.props.toggleModal}>&times;</ModalClose>
-				</ProfileForm>
+				</Form>
 			</ProfileModal>
 		)
 	}
