@@ -8,7 +8,7 @@ import Paragraph from '../../shared/Paragraph';
 import Title from '../../shared/Title';
 
 const UserFormContainer = styled(Form).attrs({
-	as: "form"
+    as: "form"
 })`
 	margin-top: 10rem;
 `;
@@ -41,204 +41,282 @@ const AnimatedParagraph = styled(Paragraph)`
 `;
 
 const initialResponse = {
-	success: false,
-	message: ''
+    success: false,
+    message: ''
 };
 
+function validate(route, name, email, password) {
+    // true means invalid, so our conditions got reversed
+    let fields = {
+        email: email.length === 0,
+        password: password.length === 0
+    };
+
+    if (route === 'signin') {
+        return fields
+    } else {
+        return {...fields, name: name.length === 0,}
+    }
+}
+
 class UserForm extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: '',
-			email: '',
-			password: '',
-			response: {
-				initialResponse
-			}
-		}
-	}
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            email: '',
+            password: '',
+            touched: {
+                name: false,
+                email: false,
+                password: false
+            },
+            response: {
+                initialResponse
+            }
+        }
+    }
 
-	onNameChange = (event) => {
-		this.setState({
-			name: event.target.value
-		});
-	};
+    onNameChange = (event) => {
+        this.setState({
+            name: event.target.value
+        });
+    };
 
-	onEmailChange = (event) => {
-		this.setState({
-			email: event.target.value
-		})
-	};
+    onEmailChange = (event) => {
+        this.setState({
+            email: event.target.value
+        })
+    };
 
-	onPasswordChange = (event) => {
-		this.setState({
-			password: event.target.value
-		})
-	};
+    onPasswordChange = (event) => {
+        this.setState({
+            password: event.target.value
+        })
+    };
 
-	saveAuthTokenInSession = (token) => {
-		window.sessionStorage.setItem('token', token);
-	};
+    handleBlur = (field) => {
+        this.setState({
+            touched: {...this.state.touched, [field]: true}
+        });
+    };
 
-	getUserRoute() {
-		let {route} = this.props;
-		return route
-	}
+    saveAuthTokenInSession = (token) => {
+        window.sessionStorage.setItem('token', token);
+    };
 
-	setResponseMessage(response) {
-		let {success, message} = response;
-		this.setState({
-			response: {
-				success,
-				message
-			}
-		})
-	}
+    getUserRoute() {
+        let {route} = this.props;
+        return route
+    }
 
-	createBody() {
-		let registerBody, signInBody;
-		let body = {
-			email: this.state.email,
-			password: this.state.password
-		};
-		let route = this.getUserRoute();
+    setResponseMessage(response) {
+        let {success, message} = response;
+        this.setState({
+            response: {
+                success,
+                message
+            }
+        })
+    }
 
-		switch (route) {
-			case 'register' :
-				registerBody = {name: this.state.name, ...body};
-				return registerBody;
-			case 'signin' :
-				signInBody = {...body};
-				return signInBody;
-			default:
-				return body;
-		}
-	};
+    createBody() {
+        let registerBody, signInBody;
+        let body = {
+            email: this.state.email,
+            password: this.state.password
+        };
+        let route = this.getUserRoute();
 
-	getProfileData = (data) => {
-		fetch(`${this.props.baseApi}/profile/${data.userId}`, {
-			method: 'get',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': data.token
-			}
-		})
-			.then(response => response.json())
-			.then(user => {
-				if (user && user.email) {
-					this.props.loadUser(user);
-					this.props.onRouteChange('home');
-				}
-			})
-	};
+        switch (route) {
+            case 'register' :
+                registerBody = {name: this.state.name, ...body};
+                return registerBody;
+            case 'signin' :
+                signInBody = {...body};
+                return signInBody;
+            default:
+                return body;
+        }
+    };
 
-	loadUserRoute(route, data) {
-		let { user } = data;
-		switch (route) {
-			case 'signin':
-				if (data.userId) {
-					this.saveAuthTokenInSession(data.token);
-					this.getProfileData(data);
-				}
-				break;
-			case 'register':
-				this.props.loadUser(user);
-				this.props.onRouteChange('home');
-				break;
-			default:
-				return null
-		}
-	}
+    getProfileData = (data) => {
+        fetch(`${this.props.baseApi}/profile/${data.userId}`, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': data.token
+            }
+        })
+            .then(response => response.json())
+            .then(user => {
+                if (user && user.email) {
+                    this.props.loadUser(user);
+                    this.props.onRouteChange('home');
+                }
+            })
+    };
 
-	onSubmitForm() {
-		let body = this.createBody();
-		let route = this.getUserRoute();
-		fetch(`${this.props.baseApi}/${route}`, {
-			method: 'post',
-			headers: {
-				'Content-type': 'application/json'
-			},
-			body: JSON.stringify(body)
-		}).then(response => {
-			return response.json()
-		})
-			.then(data => {
-				if (data.success === true) {
-					this.setResponseMessage(data);
-					this.loadUserRoute(route, data);
-				} else {
-					this.setResponseMessage(data)
-				}
-			})
-			.catch(err => console.log(err));
-	};
+    loadUserRoute(route, data) {
+        let {user} = data;
+        switch (route) {
+            case 'signin':
+                if (data.userId) {
+                    this.saveAuthTokenInSession(data.token);
+                    this.getProfileData(data);
+                }
+                break;
+            case 'register':
+                this.props.loadUser(user);
+                this.props.onRouteChange('home');
+                break;
+            default:
+                return null
+        }
+    }
+
+    canBeSubmitted(route) {
+        const errors = validate(route, this.state.name, this.state.email, this.state.password);
+        const isDisabled = Object.keys(errors).some(x => errors[x]);
+        return !isDisabled;
+    }
+
+    onSubmitForm(e) {
+        let route = this.getUserRoute();
+        let body = this.createBody();
+
+        if (!this.canBeSubmitted(route)) {
+            e.preventDefault();
+            return;
+        }
+
+        fetch(`${this.props.baseApi}/${route}`, {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }).then(response => {
+            return response.json()
+        })
+            .then(data => {
+                if (data.success === true) {
+                    this.setResponseMessage(data);
+                    this.loadUserRoute(route, data);
+                } else {
+                    this.setResponseMessage(data)
+                }
+            })
+            .catch(err => console.log(err));
+    };
+
+    createFormMarkup() {
+        const {route, onRouteChange} = this.props;
+        const errors = validate(route, this.state.name, this.state.email, this.state.password);
+        const isDisabled = Object.keys(errors).some(x => errors[x]);
+        const shouldMarkError = (field) => {
+            const hasError = errors[field];
+            const shouldShow = this.state.touched[field];
+            return hasError ? shouldShow : false;
+        };
+        let sharedInputMarkup = (
+            <div>
+                <InputField
+                    id="email-address"
+                    className={shouldMarkError("email") ? "mb2 error" : "mb2"}
+                    label="Email address"
+                    placeholder="Email address"
+                    onChange={this.onEmailChange}
+                    onBlur={() => this.handleBlur("email")}
+                    name="email-address"
+                    type="email"
+                    value={this.state.email}
+                    required
+                />
 
 
-	createFormMarkup() {
-		const {route, onRouteChange} = this.props;
-		let sharedInputMarkup = (
-			<div>
-				<InputField className="mb2" onChange={this.onEmailChange} type="email" name="email-address"
-				            id="email-address" placeholder="Email address" label="Email address"
-				            required/>
+                <InputField
+                    id="password"
+                    className={`mb4 ${shouldMarkError("password") ? "error" : ""}`}
+                    label="password"
+                    placeholder="Password"
+                    onChange={this.onPasswordChange}
+                    onBlur={() => this.handleBlur("password")}
+                    name="password"
+                    type="password"
+                    required
+                />
+            </div>
+        );
+        if (route === 'signin' || route === 'signout') {
+            return (
+                <UserFormContainer>
+                    <FormWrapper>
+                        <Title>Sign In</Title>
+                        <UserFormError>
+                            {this.state.response.message}
+                        </UserFormError>
+                        {sharedInputMarkup}
+                        <Button className="mb3" disabled={isDisabled} onClick={() => this.onSubmitForm(route)}
+                                type="button" value="signin">Sign
+                            in</Button>
+                    </FormWrapper>
+                    <UserFormAnchor>
+                        <FormWrapper bottom>
+                            <AnimatedParagraph onClick={() => {
+                                onRouteChange('register');
+                                this.setResponseMessage(initialResponse);
+                            }}>New here? <Span>Sign
+                                Up</Span></AnimatedParagraph>
+                        </FormWrapper>
+                    </UserFormAnchor>
+                </UserFormContainer>
+            );
+        } else if (route === 'register') {
+            return (
+                <UserFormContainer>
+                    <FormWrapper top>
+                        <Title>Register</Title>
+                        <UserFormError>
+                            {this.state.response.message}
+                        </UserFormError>
+                        <InputField
+                            id="name"
+                            className={shouldMarkError("name") ? "mb2 error" : "mb2"}
+                            label="Name"
+                            placeholder="Name"
+                            onChange={this.onNameChange}
+                            onBlur={() => this.handleBlur("name")}
+                            name="name"
+                            type="text"
+                            value={this.state.name}
+                            required
+                        >
+                        </InputField>
+                        {sharedInputMarkup}
+                        <Button className="mb3" disabled={isDisabled} onClick={() => this.onSubmitForm(route)}
+                                type="button" value="Register">
+                            Register
+                        </Button>
+                    </FormWrapper>
+                    <UserFormAnchor>
+                        <FormWrapper bottom>
+                            <AnimatedParagraph onClick={() => {
+                                onRouteChange('signin');
+                                this.setResponseMessage(initialResponse);
+                            }}>Already have an account? <Span>Sign
+                                in</Span></AnimatedParagraph>
+                        </FormWrapper>
+                    </UserFormAnchor>
+                </UserFormContainer>
+            )
+        } else
+            return null
+    };
 
-
-				<InputField className="mb4" onChange={this.onPasswordChange} type="password" name="password"
-				            id="password" placeholder="Password" label="password" required/>
-			</div>
-		);
-		if (route === 'signin' || route === 'signout') {
-			return (
-				<UserFormContainer>
-					<FormWrapper>
-						<Title>Sign In</Title>
-						<UserFormError>
-							{this.state.response.message}
-						</UserFormError>
-						{sharedInputMarkup}
-						<Button className="mb3" onClick={() => this.onSubmitForm(route)} type="submit" value="signin">Sign
-							in</Button>
-					</FormWrapper>
-					<UserFormAnchor>
-						<FormWrapper bottom>
-							<AnimatedParagraph onClick={() => {onRouteChange('register'); this.setResponseMessage(initialResponse);}}>New here? <Span>Sign
-								Up</Span></AnimatedParagraph>
-						</FormWrapper>
-					</UserFormAnchor>
-				</UserFormContainer>
-			);
-		} else if (route === 'register') {
-			return (
-				<UserFormContainer>
-					<FormWrapper top>
-						<Title>Register</Title>
-						<UserFormError>
-							{this.state.response.message}
-						</UserFormError>
-						<InputField className="mb2" onChange={this.onNameChange} type="text" name="name" id="name"
-						            placeholder="Name" label="Name" required>
-						</InputField>
-						{sharedInputMarkup}
-						<Button className="mb3" onClick={() => this.onSubmitForm(route)}
-						        type="submit" value="Register">
-							Register
-						</Button>
-					</FormWrapper>
-					<UserFormAnchor>
-						<FormWrapper bottom>
-							<AnimatedParagraph onClick={() => {onRouteChange('signin'); this.setResponseMessage(initialResponse);}}>Already have an account? <Span>Sign
-								in</Span></AnimatedParagraph>
-						</FormWrapper>
-					</UserFormAnchor>
-				</UserFormContainer>
-			)
-		} else
-			return null
-	};
-
-	render() {
-		return this.createFormMarkup()
-	}
+    render() {
+        return this.createFormMarkup()
+    }
 }
 
 export default UserForm;

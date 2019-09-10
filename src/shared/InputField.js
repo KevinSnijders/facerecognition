@@ -5,6 +5,9 @@ const InputField = styled.input`
 	border: 2px solid #CCC;
 	font-size: 1.4rem;
 	line-height: 2rem;
+	&.error {
+	    border: 1px solid ${props => props.theme.primaryColor};
+	}
 `;
 
 export default InputField;
