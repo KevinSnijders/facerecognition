@@ -2,13 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {Form, FormWrapper} from '../../shared/Form';
-import IconInputField from '../../shared/Icon';
+import InputField from '../../shared/InputField';
 import Button from '../../shared/Button';
 import Paragraph from '../../shared/Paragraph';
 import Title from '../../shared/Title';
-import UserIcon from '../../assets/svg/icons/user.svg'
-import PasswordIcon from '../../assets/svg/icons/password.svg'
-import EmailIcon from '../../assets/svg/icons/email.svg'
 
 const UserFormContainer = styled(Form).attrs({
     as: "form"

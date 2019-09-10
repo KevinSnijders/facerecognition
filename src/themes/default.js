@@ -6,6 +6,7 @@ const DefaultTheme = {
 	primaryColorDrk: '#FA6900',
 	primaryTextColor: '#6c757d',
 	lightTextColor: '#FFF',
+	errorColor: '#ED4747',
 	primaryFormBg: 'rgba(238, 238, 238, 0.8)',
 	secondaryFormBg: 'rgba(255, 255, 255, 0.9)',
 	borderRadius: '.5rem',
