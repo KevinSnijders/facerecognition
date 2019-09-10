@@ -9,7 +9,14 @@ const Button = styled.button`
     cursor: pointer;
     font-size: ${props => props.theme.fontSize};
     border-radius: ${props => props.theme.borderRadius};
-    
+
+    &:disabled {
+       cursor: not-allowed;
+       &:hover {
+        background-color: ${props => props.theme.primaryColor};
+       }
+    }
+
     &:hover {
         background-color: ${props => props.theme.primaryColorDrk};
     }
