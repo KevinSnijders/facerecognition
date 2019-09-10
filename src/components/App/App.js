@@ -26,6 +26,9 @@ const GlobalStyle = createGlobalStyle`
     html {
 	    font-size: 62.5%;
 	    box-sizing: border-box;
+	    @media only screen and (max-width: 600px) {
+	        font-size: 50%
+	    }
     }
     
 	body {
@@ -84,7 +87,7 @@ const ParticlesWrapper = styled.div`
 `;
 
 const HomeWrapper = styled.section`
-	
+	padding: 0 1.6rem;
 `;
 
 const particlesOptions = {
